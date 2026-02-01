@@ -226,7 +226,7 @@ Step 2 の結果を顧客ごとに集計します。
 **Step 4: メインクエリ — 顧客名を結合し、経過日数を計算する**
 
 `customers` テーブルを結合して顧客名を取得します。
-最終購入日から基準日（2024-12-31）までの日数も計算して、「最近買っていない顧客」を見つけられるようにします。
+最終購入日から基準日（2025-01-31）までの日数も計算して、「最近買っていない顧客」を見つけられるようにします。
 
 
  回答例を見る
@@ -257,7 +257,7 @@ SELECT
       c.customer_name
     , cc.purchase_count
     , ROUND(cc.avg_purchase_interval, 1) AS avg_interval_days
-    , DATE '2024-12-31' - cc.last_purchase_date AS days_since_last_purchase
+    , DATE '2025-01-31' - cc.last_purchase_date AS days_since_last_purchase
 FROM
     customer_cycle cc
     JOIN customers c
