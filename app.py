@@ -62,7 +62,7 @@ con = init_db()
 
 # 利用可能なテーブル一覧を表示
 with st.sidebar:
-    st.header("📊 利用可能なテーブル")
+    st.header("利用可能なテーブル")
     tables = con.execute("SHOW TABLES").fetchall()
     
     for table in tables:
@@ -75,7 +75,7 @@ with st.sidebar:
 col1, col2 = st.columns([4, 6])
 
 with col1:
-    st.header("✍️ SQLエディタ")
+    st.header("SQLエディタ")
     
     # セッションステートにクエリを保存
     if 'sql_input' not in st.session_state:
@@ -104,7 +104,7 @@ FETCH FIRST 10 ROWS ONLY;"""
         st.rerun()
 
 with col2:
-    st.header("📊 データビューワー")
+    st.header("データビューワー")
     
     # 選択されたテーブルのスキーマ表示
     if 'selected_table' in st.session_state:
