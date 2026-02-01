@@ -1,14 +1,14 @@
-# 🦆 DuckDBで学ぶSQL入門アプリ
+# Webブラウザで学ぶSQL入門アプリ
 
 StreamlitとDuckDBを使った、初学者向けのインタラクティブなSQL学習アプリです。
 
 ## 特徴
 
-- 📊 **リアルタイムデータビューワー**: SQLの実行結果を即座に確認
-- ✍️ **インタラクティブなSQLエディタ**: クエリを書いてすぐに試せる
-- 💡 **豊富なサンプルクエリ**: よく使うSQL文の例を用意
-- 🎯 **初学者フレンドリー**: エラー時のヒント機能付き
-- 🚀 **ポータブル**: ローカル、EC2、コンテナどこでも動作
+- リアルタイムデータビューワー: SQLの実行結果を即座に確認
+- インタラクティブなSQLエディタ: クエリを書いてすぐに試せる
+- 豊富なサンプルクエリ: よく使うSQL文の例を用意
+- 初学者フレンドリー: エラー時のヒント機能付き
+- ポータブル: ローカル、EC2、コンテナどこでも動作
 
 ## セットアップ
 
@@ -16,11 +16,11 @@ StreamlitとDuckDBを使った、初学者向けのインタラクティブなSQ
 
 ```bash
 # リポジトリのクローン（またはファイルのダウンロード）
-cd sql_learning_app
+cd sql_workbook
 
 # 仮想環境の作成（推奨）
-python -m venv venv
-source venv/bin/activate  # Windowsの場合: venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate
 
 # 依存パッケージのインストール
 pip install -r requirements.txt
@@ -51,38 +51,27 @@ nohup streamlit run app.py --server.port 8501 --server.address 0.0.0.0 &
 
 ## 使い方
 
-1. **テーブル一覧を確認**: 左サイドバーで利用可能なテーブルをクリック
-2. **練習問題を見る**: サイドバーの「📝 練習問題」リンクから問題集にアクセス
-3. **SQLを書く**: 左カラムのエディタにSQLクエリを入力
-4. **実行**: 「▶️ 実行」ボタンをクリック
-5. **結果を確認**: 右カラムに結果が表示されます
+1. テーブル一覧を確認: 左サイドバーで利用可能なテーブルをクリック
+2. 練習問題を見る: サイドバーの「📝 練習問題」リンクから問題集にアクセス
+3. SQLを書く: 左カラムのエディタにSQLクエリを入力
+4. 実行: 「▶️ 実行」ボタンをクリック
+5. 結果を確認: 右カラムに結果が表示されます
 
 ### 練習問題について
 
-`data/EXERCISES.md` に**34問の練習問題**があります：
-
-- **基礎編（問題1-6）**: SELECT, WHERE, ORDER BY の基本
-- **実務編（問題7-8）**: AS句とビジネスドメイン用語
-- **関数編Part1（問題9-13）**: 日付関数マスター（EXTRACT使用）
-- **関数編Part2（問題14-16）**: 文字列関数マスター（SUBSTRING、||使用）
-- **中級編（問題17-19）**: JOIN, GROUP BY, 集計関数
-- **応用編Part1（問題20-23）**: CASE式の様々なパターン
-- **応用編Part2（問題24-26）**: 縦持ち⇔横持ち変換（ピボット/アンピボット）
-- **応用編Part3（問題27-31）**: Window関数の実践テクニック
-- **応用編Part4（問題32-33）**: CTE（WITH句）
-- **チャレンジ問題（問題34）**: 実践的なコホート分析
+`EXERCISES.md` に練習問題があります：
 
 #### 標準SQLと実用性のバランス
 
-このアプリは**標準SQL（ISO/IEC 9075）**をベースにしていますが、実務での使いやすさも考慮しています。
+このアプリは標準SQL（ISO/IEC 9075）をベースにしていますが、実務での使いやすさも考慮しています。
 
-**結果件数の制限について**:
-- **標準SQL**: `FETCH FIRST n ROWS ONLY` （SQL:2008）
-- **実務での慣例**: `LIMIT n` （PostgreSQL、MySQL、BigQuery、Athena、Snowflake、DuckDBなど）
+結果件数の制限について:
+- 標準SQL: `FETCH FIRST n ROWS ONLY` （SQL:2008）
+- 実務での慣例: `LIMIT n` （PostgreSQL、MySQL、BigQuery、Athena、Snowflake、DuckDBなど）
 
-問題1で `FETCH FIRST` を紹介した上で、**以降の問題では実務で一般的な `LIMIT` を使用しています**。これは主要なクラウドデータウェアハウスで標準的な書き方です。
+問題1で `FETCH FIRST` を紹介した上で、以降の問題では実務で一般的な `LIMIT` を使用しています。これは主要なクラウドデータウェアハウスで標準的な書き方です。
 
-**使用している標準SQL機能**:
+使用している標準SQL機能:
 - `EXTRACT()` - 日付から年月日・曜日を抽出（SQL:1992）
 - `SUBSTRING()` - 文字列の部分取得（SQL:1992）
 - `||` - 文字列結合演算子（SQL:1992）
@@ -96,7 +85,7 @@ nohup streamlit run app.py --server.port 8501 --server.address 0.0.0.0 &
 - 回答例
 - 解説
 
-が含まれています。まず自分で考えてから回答を見ることをお勧めします。
+が含まれています。初心者は写経で書いてあるコードを書き写して実行することで、手を動かしてください。中級者以上はまず自分で考えてから回答を見るなどレベル別で活用してください。
 
 ## サンプルデータ
 
@@ -142,17 +131,17 @@ nohup streamlit run app.py --server.port 8501 --server.address 0.0.0.0 &
 - カラム選択
 - LIMIT句（実務で一般的、標準SQLはFETCH FIRST）
 - ORDER BY
-- **AS句による列名指定**（ビジネスドメイン用語での命名）
+- AS句による列名指定（ビジネスドメイン用語での命名）
 
 ### 2. 日付・文字列関数
-**日付関数**:
+日付関数:
 - `DATE_TRUNC()`: 月次集計
 - `DAYNAME()`: 曜日別分析
 - `EXTRACT()`: 年・月・日の抽出
 - `BETWEEN`: 日付範囲抽出
 - 日付の引き算（期間計算）
 
-**文字列関数**:
+文字列関数:
 - `CONCAT()`: 文字列結合
 - `UPPER()`, `LOWER()`: 大文字小文字変換
 - `LENGTH()`: 文字数取得
@@ -179,8 +168,8 @@ nohup streamlit run app.py --server.port 8501 --server.address 0.0.0.0 &
 - ピボット集計（カテゴリ別売上を列に展開）
 
 ### 7. 縦持ち⇔横持ち変換
-- **ピボット（縦→横）**: CASE式 + GROUP BY でカテゴリを列に展開
-- **アンピボット（横→縦）**: UNION ALL で列を行に変換
+- ピボット（縦→横）: CASE式 + GROUP BY でカテゴリを列に展開
+- アンピボット（横→縦）: UNION ALL で列を行に変換
 - 実務で頻出のデータ整形テクニック
 
 ### 8. Window関数
@@ -235,123 +224,46 @@ con.execute("""
 
 ## 技術スタック
 
-- **Streamlit**: Webアプリフレームワーク
-- **DuckDB**: 高速なインメモリSQL分析データベース
-- **Pandas**: データ操作
-
-## 今後の拡張案
-
-- [ ] クエリ履歴機能
-- [ ] クエリの保存/読み込み
-- [ ] 段階的な学習チュートリアル（初級→中級→上級）
-- [ ] クエリ実行計画の表示（EXPLAIN）
-- [ ] クエリのパフォーマンス計測
-- [ ] データビジュアライゼーション（グラフ表示）
-- [ ] より多様な業界のサンプルデータセット
-- [ ] SQL問題集モード（練習問題と解答）
-- [ ] クエリの自動フォーマット
-- [ ] エラー診断とヒント強化
-
----
-
-## ⚡ データエンジニアのベストプラクティス
-
-このアプリでは、実務で役立つSQL習慣も学べます：
-
-### 1. SELECT * を避ける
-- 必要なカラムだけを明示的に選択
-- パフォーマンス向上とコードの可読性向上
-
-### 2. 必ず件数制限を付ける（LIMIT）
-- 予期しない大量データ取得を防ぐ
-- クエリ実行時間の制御
-- 本番環境での事故防止
-- **実務では** `LIMIT n` **を使用**（標準SQLは `FETCH FIRST n ROWS ONLY` だが、実務では `LIMIT` が一般的）
-
-### 3. DISTINCTの要否を意識する
-- `COUNT(DISTINCT column)`: ユニークな値の数
-- `COUNT(*)`: 全行数
-- 不要なDISTINCTはパフォーマンス低下の原因
-
-### 4. AS句で明確な列名を付ける
-- 計算結果や集計には必ずASで名前を付ける
-- 技術用語（amt, qty）ではなくビジネス用語（total_sales_amount, purchase_quantity）
-- ビジネスドメインに応じて用語を使い分ける（営業分析なら`account`、CS分析なら`customer`）
-- データマート構築では特に重要
-
-詳細は `data/EXERCISES.md` のベストプラクティスセクションを参照してください。
+- Streamlit: Webアプリフレームワーク
+- DuckDB: 高速なインメモリSQL分析データベース
+- Pandas: データ操作
 
 ---
 
 ## 📊 SQL標準と実用性のバランス
 
-このアプリは**標準SQL（ISO/IEC 9075）**をベースにしていますが、実務での使いやすさも考慮しています。
+このアプリは標準SQL（ISO/IEC 9075）をベースにしていますが、実務での使いやすさも考慮しています。
 
 ### 標準SQL機能のみを使用（LIMITを除く）
 
-**SQL:1992（SQL-92）**:
+SQL:1992（SQL-92）:
 - SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY
 - JOIN（INNER, LEFT, RIGHT, FULL OUTER）
 - CASE式、集計関数（COUNT, SUM, AVG, MIN, MAX）
 - DISTINCT、UNION、SUBSTRING、UPPER、LOWER、CHAR_LENGTH
 - EXTRACT（日付部分の取得）
 
-**SQL:1999（SQL3）**:
+SQL:1999（SQL3）:
 - CTE（WITH句）
 
-**SQL:2003**:
+SQL:2003:
 - Window関数（RANK, ROW_NUMBER, DENSE_RANK, LAG, LEAD, NTILE など）
 
 ### 結果件数の制限について
 
-**標準SQL（SQL:2008）**: `FETCH FIRST n ROWS ONLY`
+標準SQL（SQL:2008）: `FETCH FIRST n ROWS ONLY`
 
-**実務での慣例**: `LIMIT n`
+実務での慣例: `LIMIT n`
 - PostgreSQL、MySQL、BigQuery、Athena、Snowflake、DuckDBなど主要な分析系DBで広くサポート
 - 短く書けて読みやすい
-- **このアプリでは実用性を重視し、`LIMIT` を使用しています**
+- このアプリでは実用性を重視し、`LIMIT` を使用しています
 
 問題1で `FETCH FIRST` を紹介した上で、以降の問題では `LIMIT` を使用しています。
 
 ### データベース互換性
 
-このアプリのクエリは以下のデータベースで動作します：
-- ✅ PostgreSQL 8.4+
-- ✅ MySQL 8.0+（5.7以前も LIMIT サポート）
-- ✅ BigQuery
-- ✅ Athena（Presto/Trino）
-- ✅ Snowflake
-- ✅ DuckDB
-- ✅ SQL Server 2012+（LIMIT の代わりに TOP または FETCH FIRST を使用）
-- ✅ Oracle 12c+（LIMIT の代わりに FETCH FIRST または ROWNUM を使用）
-
-### SQL Server / Oracle での使用
-
-**SQL Server**:
-```sql
--- このアプリの書き方
-SELECT * FROM sales LIMIT 100;
-
--- SQL Server での書き方
-SELECT TOP 100 * FROM sales;
--- または
-SELECT * FROM sales FETCH FIRST 100 ROWS ONLY;
-```
-
-**Oracle**:
-```sql
--- このアプリの書き方
-SELECT * FROM sales LIMIT 100;
-
--- Oracle 12c以降
-SELECT * FROM sales FETCH FIRST 100 ROWS ONLY;
-
--- Oracle 11g以前
-SELECT * FROM (SELECT * FROM sales) WHERE ROWNUM <= 100;
-```
-
----
-
-## ライセンス
-
-MIT License
+このアプリのクエリは標準SQLに概ね準拠しているため、以下のデータベースで動作する想定です（DuckDB以外の環境での動作検証はしていません）：
+- DuckDB
+- Amazon Athena（Apache Trino）
+- Snowflake
+- BigQuery
