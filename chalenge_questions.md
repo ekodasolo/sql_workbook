@@ -28,7 +28,11 @@ ROUND(1234.5, 0)   -- 結果: 1235（整数に丸め）
 
 ```sql
 -- テーブルAが3行、テーブルBが2行なら、結果は 3×2 = 6行
-SELECT * FROM table_a CROSS JOIN table_b;
+SELECT
+      *
+FROM
+    table_a
+    CROSS JOIN table_b;
 ```
 
 「全ての行に同じ値を付けたい」場面で便利です。
@@ -37,12 +41,18 @@ SELECT * FROM table_a CROSS JOIN table_b;
 ```sql
 -- 例: 全体の日数を各カテゴリ行に付与する
 WITH date_range AS (
-    SELECT MAX(sale_date) - MIN(sale_date) + 1 AS total_days
-    FROM sales
+    SELECT
+          MAX(sale_date) - MIN(sale_date) + 1 AS total_days
+    FROM
+        sales
 )
-SELECT cs.category, cs.count, dr.total_days
-FROM category_summary cs
-CROSS JOIN date_range dr;  -- date_range は1行なので、各カテゴリ行にtotal_daysが付く
+SELECT
+      cs.category
+    , cs.count
+    , dr.total_days
+FROM
+    category_summary cs
+    CROSS JOIN date_range dr;  -- date_range は1行なので、各カテゴリ行にtotal_daysが付く
 ```
 
 この問題集では問題5で使用します。
@@ -54,12 +64,13 @@ PARTITION BY を省略すると「全行を対象にした合計」を各行に�
 
 ```sql
 -- 各行に全体合計を付けて、割合を計算する例
-SELECT 
-    product_name,
-    total_sales,
-    SUM(total_sales) OVER () AS overall_total,          -- 全体合計
-    total_sales * 100.0 / SUM(total_sales) OVER () AS pct  -- 全体に占める割合
-FROM product_summary;
+SELECT
+      product_name
+    , total_sales
+    , SUM(total_sales) OVER () AS overall_total          -- 全体合計
+    , total_sales * 100.0 / SUM(total_sales) OVER () AS pct  -- 全体に占める割合
+FROM
+    product_summary;
 ```
 
 この問題集では問題1で使用します。
@@ -89,20 +100,25 @@ FROM product_summary;
 
 ```sql
 WITH product_sales AS (
-    SELECT 
-        p.product_name,
-        SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
-    FROM sales s
-    JOIN products p ON s.product_id = p.product_id
-    GROUP BY p.product_name
+    SELECT
+          p.product_name
+        , SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
+    FROM
+        sales s
+        JOIN products p
+            ON s.product_id = p.product_id
+    GROUP BY
+        p.product_name
 )
-SELECT 
-    product_name,
-    ROUND(total_sales, 2) AS total_sales,
-    ROUND(total_sales * 100.0 / SUM(total_sales) OVER (), 2) AS sales_percentage,
-    ROUND(SUM(total_sales * 100.0 / SUM(total_sales) OVER ()) OVER (ORDER BY total_sales DESC), 2) AS cumulative_percentage
-FROM product_sales
-ORDER BY total_sales DESC
+SELECT
+      product_name
+    , ROUND(total_sales, 2) AS total_sales
+    , ROUND(total_sales * 100.0 / SUM(total_sales) OVER (), 2) AS sales_percentage
+    , ROUND(SUM(total_sales * 100.0 / SUM(total_sales) OVER ()) OVER (ORDER BY total_sales DESC), 2) AS cumulative_percentage
+FROM
+    product_sales
+ORDER BY
+    total_sales DESC
 LIMIT 5;
 ```
 
@@ -137,31 +153,40 @@ LIMIT 5;
 
 ```sql
 WITH purchase_intervals AS (
-    SELECT 
-        customer_id,
-        sale_date,
-        sale_date - LAG(sale_date) OVER (PARTITION BY customer_id ORDER BY sale_date) AS days_since_last
-    FROM sales
-),
-customer_cycle AS (
-    SELECT 
-        customer_id,
-        COUNT(*) AS purchase_count,
-        AVG(days_since_last) AS avg_purchase_interval,
-        MAX(sale_date) AS last_purchase_date
-    FROM purchase_intervals
-    GROUP BY customer_id
-    HAVING COUNT(*) >= 2
+    SELECT
+          customer_id
+        , sale_date
+        , sale_date - LAG(sale_date) OVER (PARTITION BY customer_id ORDER BY sale_date) AS days_since_last
+    FROM
+        sales
 )
-SELECT 
-    c.customer_name,
-    cc.purchase_count,
-    ROUND(cc.avg_purchase_interval, 1) AS avg_interval_days,
-    DATE '2024-01-31' - cc.last_purchase_date AS days_since_last_purchase
-FROM customer_cycle cc
-JOIN customers c ON cc.customer_id = c.customer_id
-WHERE cc.avg_purchase_interval IS NOT NULL
-ORDER BY cc.purchase_count DESC, cc.avg_purchase_interval
+, customer_cycle AS (
+    SELECT
+          customer_id
+        , COUNT(*) AS purchase_count
+        , AVG(days_since_last) AS avg_purchase_interval
+        , MAX(sale_date) AS last_purchase_date
+    FROM
+        purchase_intervals
+    GROUP BY
+        customer_id
+    HAVING
+        COUNT(*) >= 2
+)
+SELECT
+      c.customer_name
+    , cc.purchase_count
+    , ROUND(cc.avg_purchase_interval, 1) AS avg_interval_days
+    , DATE '2024-01-31' - cc.last_purchase_date AS days_since_last_purchase
+FROM
+    customer_cycle cc
+    JOIN customers c
+        ON cc.customer_id = c.customer_id
+WHERE
+    cc.avg_purchase_interval IS NOT NULL
+ORDER BY
+    cc.purchase_count DESC
+    , cc.avg_purchase_interval
 LIMIT 20;
 ```
 
@@ -200,33 +225,39 @@ LIMIT 20;
 
 ```sql
 WITH product_sales AS (
-    SELECT 
-        p.product_name,
-        SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
-    FROM sales s
-    JOIN products p ON s.product_id = p.product_id
-    GROUP BY p.product_name
-),
-product_ranking AS (
-    SELECT 
-        product_name,
-        total_sales,
-        ROUND(total_sales * 100.0 / SUM(total_sales) OVER (), 2) AS sales_percentage,
-        ROUND(SUM(total_sales) OVER (ORDER BY total_sales DESC) * 100.0 / SUM(total_sales) OVER (), 2) AS cumulative_percentage
-    FROM product_sales
+    SELECT
+          p.product_name
+        , SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
+    FROM
+        sales s
+        JOIN products p
+            ON s.product_id = p.product_id
+    GROUP BY
+        p.product_name
 )
-SELECT 
-    product_name,
-    ROUND(total_sales, 2) AS total_sales,
-    sales_percentage,
-    cumulative_percentage,
-    CASE 
-        WHEN cumulative_percentage <= 70 THEN 'A'
-        WHEN cumulative_percentage <= 90 THEN 'B'
-        ELSE 'C'
-    END AS abc_rank
-FROM product_ranking
-ORDER BY total_sales DESC;
+, product_ranking AS (
+    SELECT
+          product_name
+        , total_sales
+        , ROUND(total_sales * 100.0 / SUM(total_sales) OVER (), 2) AS sales_percentage
+        , ROUND(SUM(total_sales) OVER (ORDER BY total_sales DESC) * 100.0 / SUM(total_sales) OVER (), 2) AS cumulative_percentage
+    FROM
+        product_sales
+)
+SELECT
+      product_name
+    , ROUND(total_sales, 2) AS total_sales
+    , sales_percentage
+    , cumulative_percentage
+    , CASE
+          WHEN cumulative_percentage <= 70 THEN 'A'
+          WHEN cumulative_percentage <= 90 THEN 'B'
+          ELSE 'C'
+      END AS abc_rank
+FROM
+    product_ranking
+ORDER BY
+    total_sales DESC;
 ```
 
 解説: 
@@ -261,26 +292,33 @@ ORDER BY total_sales DESC;
 
 ```sql
 WITH customer_metrics AS (
-    SELECT 
-        s.customer_id,
-        c.customer_segment,
-        COUNT(*) AS purchase_count,
-        SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS lifetime_value,
-        SUM(CASE WHEN s.discount_rate > 0 THEN 1 ELSE 0 END) AS discounted_purchases,
-        COUNT(*) AS total_purchases
-    FROM sales s
-    JOIN customers c ON s.customer_id = c.customer_id
-    GROUP BY s.customer_id, c.customer_segment
+    SELECT
+          s.customer_id
+        , c.customer_segment
+        , COUNT(*) AS purchase_count
+        , SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS lifetime_value
+        , SUM(CASE WHEN s.discount_rate > 0 THEN 1 ELSE 0 END) AS discounted_purchases
+        , COUNT(*) AS total_purchases
+    FROM
+        sales s
+        JOIN customers c
+            ON s.customer_id = c.customer_id
+    GROUP BY
+        s.customer_id
+        , c.customer_segment
 )
-SELECT 
-    customer_segment,
-    COUNT(DISTINCT customer_id) AS customer_count,
-    ROUND(AVG(purchase_count), 2) AS avg_purchase_count,
-    ROUND(AVG(lifetime_value), 2) AS avg_lifetime_value,
-    ROUND(AVG(discounted_purchases * 100.0 / total_purchases), 2) AS discount_usage_rate
-FROM customer_metrics
-GROUP BY customer_segment
-ORDER BY avg_lifetime_value DESC;
+SELECT
+      customer_segment
+    , COUNT(DISTINCT customer_id) AS customer_count
+    , ROUND(AVG(purchase_count), 2) AS avg_purchase_count
+    , ROUND(AVG(lifetime_value), 2) AS avg_lifetime_value
+    , ROUND(AVG(discounted_purchases * 100.0 / total_purchases), 2) AS discount_usage_rate
+FROM
+    customer_metrics
+GROUP BY
+    customer_segment
+ORDER BY
+    avg_lifetime_value DESC;
 ```
 
 解説: 
@@ -316,31 +354,40 @@ ORDER BY avg_lifetime_value DESC;
 
 ```sql
 WITH category_sales AS (
-    SELECT 
-        p.category,
-        s.sale_date,
-        SUM(s.quantity) AS daily_quantity
-    FROM sales s
-    JOIN products p ON s.product_id = p.product_id
-    GROUP BY p.category, s.sale_date
-),
-date_range AS (
-    SELECT 
-        MIN(sale_date) AS start_date,
-        MAX(sale_date) AS end_date,
-        MAX(sale_date) - MIN(sale_date) + 1 AS total_days
-    FROM sales
+    SELECT
+          p.category
+        , s.sale_date
+        , SUM(s.quantity) AS daily_quantity
+    FROM
+        sales s
+        JOIN products p
+            ON s.product_id = p.product_id
+    GROUP BY
+        p.category
+        , s.sale_date
 )
-SELECT 
-    cs.category,
-    SUM(cs.daily_quantity) AS total_quantity_sold,
-    COUNT(DISTINCT cs.sale_date) AS days_with_sales,
-    ROUND(SUM(cs.daily_quantity) * 1.0 / COUNT(DISTINCT cs.sale_date), 2) AS avg_daily_sales,
-    ROUND(dr.total_days * 1.0 / COUNT(DISTINCT cs.sale_date), 2) AS avg_days_between_sales
-FROM category_sales cs
-CROSS JOIN date_range dr
-GROUP BY cs.category, dr.total_days
-ORDER BY total_quantity_sold DESC;
+, date_range AS (
+    SELECT
+          MIN(sale_date) AS start_date
+        , MAX(sale_date) AS end_date
+        , MAX(sale_date) - MIN(sale_date) + 1 AS total_days
+    FROM
+        sales
+)
+SELECT
+      cs.category
+    , SUM(cs.daily_quantity) AS total_quantity_sold
+    , COUNT(DISTINCT cs.sale_date) AS days_with_sales
+    , ROUND(SUM(cs.daily_quantity) * 1.0 / COUNT(DISTINCT cs.sale_date), 2) AS avg_daily_sales
+    , ROUND(dr.total_days * 1.0 / COUNT(DISTINCT cs.sale_date), 2) AS avg_days_between_sales
+FROM
+    category_sales cs
+    CROSS JOIN date_range dr
+GROUP BY
+    cs.category
+    , dr.total_days
+ORDER BY
+    total_quantity_sold DESC;
 ```
 
 解説: 
@@ -376,26 +423,32 @@ ORDER BY total_quantity_sold DESC;
 
 ```sql
 WITH monthly_sales AS (
-    SELECT 
-        EXTRACT(YEAR FROM sale_date) AS sale_year,
-        EXTRACT(MONTH FROM sale_date) AS sale_month,
-        SUM(quantity * unit_price * (1 - discount_rate)) AS monthly_revenue
-    FROM sales
-    GROUP BY EXTRACT(YEAR FROM sale_date), EXTRACT(MONTH FROM sale_date)
+    SELECT
+          EXTRACT(YEAR FROM sale_date) AS sale_year
+        , EXTRACT(MONTH FROM sale_date) AS sale_month
+        , SUM(quantity * unit_price * (1 - discount_rate)) AS monthly_revenue
+    FROM
+        sales
+    GROUP BY
+        EXTRACT(YEAR FROM sale_date)
+        , EXTRACT(MONTH FROM sale_date)
 )
-SELECT 
-    sale_year,
-    sale_month,
-    ROUND(monthly_revenue, 2) AS current_month_revenue,
-    ROUND(LAG(monthly_revenue) OVER (ORDER BY sale_year, sale_month), 2) AS previous_month_revenue,
-    ROUND(monthly_revenue - LAG(monthly_revenue) OVER (ORDER BY sale_year, sale_month), 2) AS revenue_change,
-    ROUND(
-        (monthly_revenue - LAG(monthly_revenue) OVER (ORDER BY sale_year, sale_month)) * 100.0 
-        / LAG(monthly_revenue) OVER (ORDER BY sale_year, sale_month), 
-        2
-    ) AS growth_rate_percent
-FROM monthly_sales
-ORDER BY sale_year, sale_month;
+SELECT
+      sale_year
+    , sale_month
+    , ROUND(monthly_revenue, 2) AS current_month_revenue
+    , ROUND(LAG(monthly_revenue) OVER (ORDER BY sale_year, sale_month), 2) AS previous_month_revenue
+    , ROUND(monthly_revenue - LAG(monthly_revenue) OVER (ORDER BY sale_year, sale_month), 2) AS revenue_change
+    , ROUND(
+          (monthly_revenue - LAG(monthly_revenue) OVER (ORDER BY sale_year, sale_month)) * 100.0
+          / LAG(monthly_revenue) OVER (ORDER BY sale_year, sale_month)
+        , 2
+      ) AS growth_rate_percent
+FROM
+    monthly_sales
+ORDER BY
+    sale_year
+    , sale_month;
 ```
 
 解説: 
@@ -429,24 +482,26 @@ ORDER BY sale_year, sale_month;
 ✅ 回答例を見る
 
 ```sql
-SELECT 
-    CASE 
-        WHEN discount_rate > 0 THEN 'With Discount'
-        ELSE 'No Discount'
-    END AS discount_status,
-    COUNT(*) AS transaction_count,
-    COUNT(DISTINCT customer_id) AS unique_customers,
-    ROUND(AVG(quantity), 2) AS avg_quantity,
-    ROUND(AVG(quantity * unit_price * (1 - discount_rate)), 2) AS avg_transaction_value,
-    ROUND(SUM(quantity * unit_price * (1 - discount_rate)), 2) AS total_revenue,
-    ROUND(SUM(quantity * unit_price * discount_rate), 2) AS total_discount_given
-FROM sales
-GROUP BY 
-    CASE 
+SELECT
+      CASE
+          WHEN discount_rate > 0 THEN 'With Discount'
+          ELSE 'No Discount'
+      END AS discount_status
+    , COUNT(*) AS transaction_count
+    , COUNT(DISTINCT customer_id) AS unique_customers
+    , ROUND(AVG(quantity), 2) AS avg_quantity
+    , ROUND(AVG(quantity * unit_price * (1 - discount_rate)), 2) AS avg_transaction_value
+    , ROUND(SUM(quantity * unit_price * (1 - discount_rate)), 2) AS total_revenue
+    , ROUND(SUM(quantity * unit_price * discount_rate), 2) AS total_discount_given
+FROM
+    sales
+GROUP BY
+    CASE
         WHEN discount_rate > 0 THEN 'With Discount'
         ELSE 'No Discount'
     END
-ORDER BY total_revenue DESC;
+ORDER BY
+    total_revenue DESC;
 ```
 
 解説: 
@@ -490,46 +545,52 @@ CRM担当から「優良顧客を特定して、特別なサービスを提供�
 
 ```sql
 WITH customer_rfm AS (
-    SELECT 
-        customer_id,
-        MAX(sale_date) AS last_purchase_date,
-        DATE '2024-01-31' - MAX(sale_date) AS recency_days,
-        COUNT(*) AS frequency,
-        SUM(quantity * unit_price * (1 - discount_rate)) AS monetary
-    FROM sales
-    GROUP BY customer_id
-),
-rfm_scores AS (
-    SELECT 
-        customer_id,
-        last_purchase_date,
-        recency_days,
-        frequency,
-        monetary,
-        NTILE(4) OVER (ORDER BY recency_days) AS recency_score,
-        NTILE(4) OVER (ORDER BY frequency DESC) AS frequency_score,
-        NTILE(4) OVER (ORDER BY monetary DESC) AS monetary_score
-    FROM customer_rfm
+    SELECT
+          customer_id
+        , MAX(sale_date) AS last_purchase_date
+        , DATE '2024-01-31' - MAX(sale_date) AS recency_days
+        , COUNT(*) AS frequency
+        , SUM(quantity * unit_price * (1 - discount_rate)) AS monetary
+    FROM
+        sales
+    GROUP BY
+        customer_id
 )
-SELECT 
-    c.customer_name,
-    rs.last_purchase_date,
-    rs.recency_days,
-    rs.frequency,
-    ROUND(rs.monetary, 2) AS total_spent,
-    rs.recency_score,
-    rs.frequency_score,
-    rs.monetary_score,
-    CASE 
-        WHEN rs.frequency_score >= 3 AND rs.monetary_score >= 3 THEN 'Champions'
-        WHEN rs.recency_score <= 2 AND rs.frequency_score >= 3 THEN 'Loyal Customers'
-        WHEN rs.recency_score <= 2 AND rs.monetary_score >= 3 THEN 'Big Spenders'
-        WHEN rs.recency_score >= 3 THEN 'At Risk'
-        ELSE 'Regular'
-    END AS customer_segment
-FROM rfm_scores rs
-JOIN customers c ON rs.customer_id = c.customer_id
-ORDER BY rs.monetary DESC
+, rfm_scores AS (
+    SELECT
+          customer_id
+        , last_purchase_date
+        , recency_days
+        , frequency
+        , monetary
+        , NTILE(4) OVER (ORDER BY recency_days) AS recency_score
+        , NTILE(4) OVER (ORDER BY frequency DESC) AS frequency_score
+        , NTILE(4) OVER (ORDER BY monetary DESC) AS monetary_score
+    FROM
+        customer_rfm
+)
+SELECT
+      c.customer_name
+    , rs.last_purchase_date
+    , rs.recency_days
+    , rs.frequency
+    , ROUND(rs.monetary, 2) AS total_spent
+    , rs.recency_score
+    , rs.frequency_score
+    , rs.monetary_score
+    , CASE
+          WHEN rs.frequency_score >= 3 AND rs.monetary_score >= 3 THEN 'Champions'
+          WHEN rs.recency_score <= 2 AND rs.frequency_score >= 3 THEN 'Loyal Customers'
+          WHEN rs.recency_score <= 2 AND rs.monetary_score >= 3 THEN 'Big Spenders'
+          WHEN rs.recency_score >= 3 THEN 'At Risk'
+          ELSE 'Regular'
+      END AS customer_segment
+FROM
+    rfm_scores rs
+    JOIN customers c
+        ON rs.customer_id = c.customer_id
+ORDER BY
+    rs.monetary DESC
 LIMIT 30;
 ```
 
@@ -568,42 +629,51 @@ LIMIT 30;
 
 ```sql
 WITH customer_cohort AS (
-    SELECT 
-        customer_id,
-        EXTRACT(YEAR FROM MIN(sale_date)) AS cohort_year,
-        EXTRACT(MONTH FROM MIN(sale_date)) AS cohort_month
-    FROM sales
-    GROUP BY customer_id
-),
-sales_with_cohort AS (
-    SELECT 
-        s.customer_id,
-        cc.cohort_year,
-        cc.cohort_month,
-        (EXTRACT(YEAR FROM s.sale_date) - cc.cohort_year) * 12 
-            + (EXTRACT(MONTH FROM s.sale_date) - cc.cohort_month) AS months_since_first
-    FROM sales s
-    JOIN customer_cohort cc ON s.customer_id = cc.customer_id
+    SELECT
+          customer_id
+        , EXTRACT(YEAR FROM MIN(sale_date)) AS cohort_year
+        , EXTRACT(MONTH FROM MIN(sale_date)) AS cohort_month
+    FROM
+        sales
+    GROUP BY
+        customer_id
 )
-SELECT 
-    cohort_year,
-    cohort_month,
-    COUNT(DISTINCT CASE WHEN months_since_first = 0 THEN customer_id END) AS cohort_size,
-    COUNT(DISTINCT CASE WHEN months_since_first = 1 THEN customer_id END) AS retained_month_1,
-    COUNT(DISTINCT CASE WHEN months_since_first = 2 THEN customer_id END) AS retained_month_2,
-    ROUND(
-        COUNT(DISTINCT CASE WHEN months_since_first = 1 THEN customer_id END) * 100.0 
-        / COUNT(DISTINCT CASE WHEN months_since_first = 0 THEN customer_id END),
-        2
-    ) AS retention_rate_month_1,
-    ROUND(
-        COUNT(DISTINCT CASE WHEN months_since_first = 2 THEN customer_id END) * 100.0 
-        / COUNT(DISTINCT CASE WHEN months_since_first = 0 THEN customer_id END),
-        2
-    ) AS retention_rate_month_2
-FROM sales_with_cohort
-GROUP BY cohort_year, cohort_month
-ORDER BY cohort_year, cohort_month;
+, sales_with_cohort AS (
+    SELECT
+          s.customer_id
+        , cc.cohort_year
+        , cc.cohort_month
+        , (EXTRACT(YEAR FROM s.sale_date) - cc.cohort_year) * 12
+              + (EXTRACT(MONTH FROM s.sale_date) - cc.cohort_month) AS months_since_first
+    FROM
+        sales s
+        JOIN customer_cohort cc
+            ON s.customer_id = cc.customer_id
+)
+SELECT
+      cohort_year
+    , cohort_month
+    , COUNT(DISTINCT CASE WHEN months_since_first = 0 THEN customer_id END) AS cohort_size
+    , COUNT(DISTINCT CASE WHEN months_since_first = 1 THEN customer_id END) AS retained_month_1
+    , COUNT(DISTINCT CASE WHEN months_since_first = 2 THEN customer_id END) AS retained_month_2
+    , ROUND(
+          COUNT(DISTINCT CASE WHEN months_since_first = 1 THEN customer_id END) * 100.0
+          / COUNT(DISTINCT CASE WHEN months_since_first = 0 THEN customer_id END)
+        , 2
+      ) AS retention_rate_month_1
+    , ROUND(
+          COUNT(DISTINCT CASE WHEN months_since_first = 2 THEN customer_id END) * 100.0
+          / COUNT(DISTINCT CASE WHEN months_since_first = 0 THEN customer_id END)
+        , 2
+      ) AS retention_rate_month_2
+FROM
+    sales_with_cohort
+GROUP BY
+    cohort_year
+    , cohort_month
+ORDER BY
+    cohort_year
+    , cohort_month;
 ```
 
 解説: 
@@ -654,37 +724,43 @@ sales テーブルには store_id カラムがあり、stores テーブルと結
 
 ```sql
 WITH store_performance AS (
-    SELECT 
-        st.store_name,
-        COUNT(*) AS transaction_count,
-        COUNT(DISTINCT s.customer_id) AS unique_customers,
-        SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_revenue,
-        AVG(s.quantity * s.unit_price * (1 - s.discount_rate)) AS avg_transaction_value,
-        SUM(CASE WHEN p.category = '家電' 
-            THEN s.quantity * s.unit_price * (1 - s.discount_rate) 
-            ELSE 0 
-        END) AS electronics_revenue,
-        SUM(CASE WHEN p.category = '家具' 
-            THEN s.quantity * s.unit_price * (1 - s.discount_rate) 
-            ELSE 0 
-        END) AS furniture_revenue
-    FROM sales s
-    JOIN stores st ON s.store_id = st.store_id
-    JOIN products p ON s.product_id = p.product_id
-    GROUP BY st.store_name
+    SELECT
+          st.store_name
+        , COUNT(*) AS transaction_count
+        , COUNT(DISTINCT s.customer_id) AS unique_customers
+        , SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_revenue
+        , AVG(s.quantity * s.unit_price * (1 - s.discount_rate)) AS avg_transaction_value
+        , SUM(CASE
+              WHEN p.category = '家電' THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+              ELSE 0
+          END) AS electronics_revenue
+        , SUM(CASE
+              WHEN p.category = '家具' THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+              ELSE 0
+          END) AS furniture_revenue
+    FROM
+        sales s
+        JOIN stores st
+            ON s.store_id = st.store_id
+        JOIN products p
+            ON s.product_id = p.product_id
+    GROUP BY
+        st.store_name
 )
-SELECT 
-    store_name,
-    ROUND(total_revenue, 2) AS total_revenue,
-    transaction_count,
-    unique_customers,
-    ROUND(avg_transaction_value, 2) AS avg_transaction_value,
-    ROUND(electronics_revenue * 100.0 / total_revenue, 2) AS electronics_ratio,
-    ROUND(furniture_revenue * 100.0 / total_revenue, 2) AS furniture_ratio,
-    RANK() OVER (ORDER BY total_revenue DESC) AS revenue_rank,
-    RANK() OVER (ORDER BY avg_transaction_value DESC) AS avg_value_rank
-FROM store_performance
-ORDER BY total_revenue DESC;
+SELECT
+      store_name
+    , ROUND(total_revenue, 2) AS total_revenue
+    , transaction_count
+    , unique_customers
+    , ROUND(avg_transaction_value, 2) AS avg_transaction_value
+    , ROUND(electronics_revenue * 100.0 / total_revenue, 2) AS electronics_ratio
+    , ROUND(furniture_revenue * 100.0 / total_revenue, 2) AS furniture_ratio
+    , RANK() OVER (ORDER BY total_revenue DESC) AS revenue_rank
+    , RANK() OVER (ORDER BY avg_transaction_value DESC) AS avg_value_rank
+FROM
+    store_performance
+ORDER BY
+    total_revenue DESC;
 ```
 
 解説: 
