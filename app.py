@@ -85,9 +85,10 @@ FETCH FIRST 10 ROWS ONLY;"""
     
     sql_query = st.text_area(
         "SQLクエリを入力してください",
-        value=st.session_state.get('sql_input'),
+        value=st.session_state.sql_input,
         height=300
     )
+    st.session_state.sql_input = sql_query
     
     # ボタン群
     btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 2])
