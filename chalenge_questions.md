@@ -113,15 +113,18 @@ FROM
 売上金額は `数量 × 単価 × (1 - 割引率)` で計算します。
 この段階では「商品名、売上金額」の2列だけのシンプルなテーブルが出来上がります。
 
-**Step 3: Window関数で「全体合計」と「累積合計」を計算する**
+**Step 3: Window関数で「全体合計」に占めるパーセンテージを算出**
 
-CTEの結果に対して、メインクエリで以下のWindow関数を適用します。
+CTEの結果に対して、以下のWindow関数を適用します。
 
 - `SUM(total_sales) OVER ()` — PARTITION BY なしなので **全行の合計** = 全商品の売上合計
 - 各行の売上をこの全体合計で割れば、割合(%)が出ます
+
+**Step 4: 「累積合計」を計算する**
+
 - `SUM(...) OVER (ORDER BY total_sales DESC)` — 売上の大きい順に **累積合計** を計算
 
-**Step 4: 上位5件に絞る**
+**Step 5: 上位5件に絞る**
 
 `ORDER BY total_sales DESC` で並べ替え、`LIMIT 5` で上位5商品だけ取得します。
 
@@ -139,14 +142,22 @@ WITH product_sales AS (
             ON s.product_id = p.product_id
     GROUP BY
         p.product_name
+),
+sales_stats AS (
+    SELECT
+          product_name
+        , total_sales
+        , total_sales * 100.0 / SUM(total_sales) OVER () AS sales_percentage
+    FROM
+        product_sales
 )
 SELECT
       product_name
     , ROUND(total_sales, 2) AS total_sales
-    , ROUND(total_sales * 100.0 / SUM(total_sales) OVER (), 2) AS sales_percentage
-    , ROUND(SUM(total_sales * 100.0 / SUM(total_sales) OVER ()) OVER (ORDER BY total_sales DESC), 2) AS cumulative_percentage
+    , ROUND(sales_percentage, 2) AS sales_percentage
+    , ROUND(SUM(sales_percentage) OVER (ORDER BY total_sales DESC), 2) AS cumulative_percentage
 FROM
-    product_sales
+    sales_stats
 ORDER BY
     total_sales DESC
 LIMIT 5;
