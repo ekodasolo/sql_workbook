@@ -132,8 +132,12 @@ SQLの記述順序（SELECT → FROM → WHERE → ...）とは異なること�
 
 回答例
 ```sql
-SELECT product_id, product_name, category
-FROM products
+SELECT
+      product_id
+    , product_name
+    , category
+FROM
+    products
 FETCH FIRST 10 ROWS ONLY;
 ```
 
@@ -163,8 +167,12 @@ FETCH FIRST 10 ROWS ONLY;
 
 回答例
 ```sql
-SELECT sale_id, sale_date, quantity
-FROM sales
+SELECT
+      sale_id
+    , sale_date
+    , quantity
+FROM
+    sales
 LIMIT 10;
 ```
 
@@ -189,15 +197,17 @@ LIMIT 10;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    customer_id,
-    product_id,
-    quantity,
-    unit_price
-FROM sales
-WHERE quantity >= 5
+SELECT
+      sale_id
+    , sale_date
+    , customer_id
+    , product_id
+    , quantity
+    , unit_price
+FROM
+    sales
+WHERE
+    quantity >= 5
 LIMIT 100;
 ```
 
@@ -225,16 +235,18 @@ LIMIT 100;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    product_id,
-    quantity,
-    unit_price,
-    discount_rate
-FROM sales
-WHERE quantity >= 3
-  AND discount_rate > 0
+SELECT
+      sale_id
+    , sale_date
+    , product_id
+    , quantity
+    , unit_price
+    , discount_rate
+FROM
+    sales
+WHERE
+    quantity >= 3
+    AND discount_rate > 0
 LIMIT 100;
 ```
 
@@ -262,15 +274,17 @@ LIMIT 100;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    customer_id,
-    product_id,
-    quantity,
-    unit_price
-FROM sales
-ORDER BY sale_date DESC
+SELECT
+      sale_id
+    , sale_date
+    , customer_id
+    , product_id
+    , quantity
+    , unit_price
+FROM
+    sales
+ORDER BY
+    sale_date DESC
 LIMIT 20;
 ```
 
@@ -297,17 +311,20 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    customer_id,
-    product_id,
-    quantity,
-    unit_price,
-    discount_rate
-FROM sales
-WHERE sale_date BETWEEN DATE '2024-01-15' AND DATE '2024-01-31'
-ORDER BY sale_date
+SELECT
+      sale_id
+    , sale_date
+    , customer_id
+    , product_id
+    , quantity
+    , unit_price
+    , discount_rate
+FROM
+    sales
+WHERE
+    sale_date BETWEEN DATE '2024-01-15' AND DATE '2024-01-31'
+ORDER BY
+    sale_date
 LIMIT 100;
 ```
 
@@ -336,18 +353,19 @@ LIMIT 100;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    customer_id,
-    product_id,
-    quantity AS purchase_quantity,
-    unit_price,
-    discount_rate,
-    quantity * unit_price AS amount_before_discount,
-    quantity * unit_price * discount_rate AS discount_amount,
-    quantity * unit_price * (1 - discount_rate) AS net_amount
-FROM sales
+SELECT
+      sale_id
+    , sale_date
+    , customer_id
+    , product_id
+    , quantity AS purchase_quantity
+    , unit_price
+    , discount_rate
+    , quantity * unit_price AS amount_before_discount
+    , quantity * unit_price * discount_rate AS discount_amount
+    , quantity * unit_price * (1 - discount_rate) AS net_amount
+FROM
+    sales
 LIMIT 20;
 ```
 
@@ -401,17 +419,20 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    customer_id,
-    COUNT(*) AS purchase_count,
-    SUM(quantity) AS total_quantity,
-    SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue,
-    AVG(quantity * unit_price * (1 - discount_rate)) AS average_order_value,
-    MIN(sale_date) AS first_purchase_date,
-    MAX(sale_date) AS last_purchase_date
-FROM sales
-GROUP BY customer_id
-ORDER BY total_revenue DESC
+SELECT
+      customer_id
+    , COUNT(*) AS purchase_count
+    , SUM(quantity) AS total_quantity
+    , SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
+    , AVG(quantity * unit_price * (1 - discount_rate)) AS average_order_value
+    , MIN(sale_date) AS first_purchase_date
+    , MAX(sale_date) AS last_purchase_date
+FROM
+    sales
+GROUP BY
+    customer_id
+ORDER BY
+    total_revenue DESC
 LIMIT 20;
 ```
 
@@ -435,15 +456,17 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    EXTRACT(YEAR FROM sale_date) AS sale_year,
-    EXTRACT(MONTH FROM sale_date) AS sale_month,
-    customer_id,
-    quantity * unit_price * (1 - discount_rate) AS net_amount
-FROM sales
-ORDER BY sale_date
+SELECT
+      sale_id
+    , sale_date
+    , EXTRACT(YEAR FROM sale_date) AS sale_year
+    , EXTRACT(MONTH FROM sale_date) AS sale_month
+    , customer_id
+    , quantity * unit_price * (1 - discount_rate) AS net_amount
+FROM
+    sales
+ORDER BY
+    sale_date
 LIMIT 20;
 ```
 
@@ -477,16 +500,21 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    EXTRACT(YEAR FROM sale_date) AS sale_year,
-    EXTRACT(MONTH FROM sale_date) AS sale_month,
-    COUNT(*) AS sales_count,
-    COUNT(DISTINCT customer_id) AS unique_customers,
-    SUM(quantity * unit_price * (1 - discount_rate)) AS monthly_revenue,
-    AVG(quantity * unit_price * (1 - discount_rate)) AS avg_order_value
-FROM sales
-GROUP BY EXTRACT(YEAR FROM sale_date), EXTRACT(MONTH FROM sale_date)
-ORDER BY sale_year, sale_month;
+SELECT
+      EXTRACT(YEAR FROM sale_date) AS sale_year
+    , EXTRACT(MONTH FROM sale_date) AS sale_month
+    , COUNT(*) AS sales_count
+    , COUNT(DISTINCT customer_id) AS unique_customers
+    , SUM(quantity * unit_price * (1 - discount_rate)) AS monthly_revenue
+    , AVG(quantity * unit_price * (1 - discount_rate)) AS avg_order_value
+FROM
+    sales
+GROUP BY
+    EXTRACT(YEAR FROM sale_date)
+    , EXTRACT(MONTH FROM sale_date)
+ORDER BY
+    sale_year
+    , sale_month;
 ```
 
 解説: 
@@ -508,8 +536,8 @@ ORDER BY sale_year, sale_month;
 
 回答例
 ```sql
-SELECT 
-    CASE EXTRACT(DOW FROM sale_date)
+SELECT
+      CASE EXTRACT(DOW FROM sale_date)
         WHEN 0 THEN 'Sunday'
         WHEN 1 THEN 'Monday'
         WHEN 2 THEN 'Tuesday'
@@ -517,13 +545,16 @@ SELECT
         WHEN 4 THEN 'Thursday'
         WHEN 5 THEN 'Friday'
         WHEN 6 THEN 'Saturday'
-    END AS day_of_week,
-    COUNT(*) AS sales_count,
-    SUM(quantity * unit_price * (1 - discount_rate)) AS total_sales,
-    AVG(quantity * unit_price * (1 - discount_rate)) AS avg_sales
-FROM sales
-GROUP BY EXTRACT(DOW FROM sale_date)
-ORDER BY EXTRACT(DOW FROM sale_date);
+      END AS day_of_week
+    , COUNT(*) AS sales_count
+    , SUM(quantity * unit_price * (1 - discount_rate)) AS total_sales
+    , AVG(quantity * unit_price * (1 - discount_rate)) AS avg_sales
+FROM
+    sales
+GROUP BY
+    EXTRACT(DOW FROM sale_date)
+ORDER BY
+    EXTRACT(DOW FROM sale_date);
 ```
 
 解説: 
@@ -543,16 +574,20 @@ ORDER BY EXTRACT(DOW FROM sale_date);
 
 回答例
 ```sql
-SELECT 
-    customer_id,
-    MIN(sale_date) AS first_purchase_date,
-    MAX(sale_date) AS last_purchase_date,
-    MAX(sale_date) - MIN(sale_date) AS days_active,
-    COUNT(*) AS purchase_count
-FROM sales
-GROUP BY customer_id
-HAVING COUNT(*) >= 2
-ORDER BY days_active DESC
+SELECT
+      customer_id
+    , MIN(sale_date) AS first_purchase_date
+    , MAX(sale_date) AS last_purchase_date
+    , MAX(sale_date) - MIN(sale_date) AS days_active
+    , COUNT(*) AS purchase_count
+FROM
+    sales
+GROUP BY
+    customer_id
+HAVING
+    COUNT(*) >= 2
+ORDER BY
+    days_active DESC
 LIMIT 20;
 ```
 
@@ -573,13 +608,13 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    EXTRACT(YEAR FROM sale_date) AS sale_year,
-    EXTRACT(MONTH FROM sale_date) AS sale_month,
-    EXTRACT(DAY FROM sale_date) AS sale_day,
-    CASE EXTRACT(DOW FROM sale_date)
+SELECT
+      sale_id
+    , sale_date
+    , EXTRACT(YEAR FROM sale_date) AS sale_year
+    , EXTRACT(MONTH FROM sale_date) AS sale_month
+    , EXTRACT(DAY FROM sale_date) AS sale_day
+    , CASE EXTRACT(DOW FROM sale_date)
         WHEN 0 THEN 'Sunday'
         WHEN 1 THEN 'Monday'
         WHEN 2 THEN 'Tuesday'
@@ -587,9 +622,10 @@ SELECT
         WHEN 4 THEN 'Thursday'
         WHEN 5 THEN 'Friday'
         WHEN 6 THEN 'Saturday'
-    END AS day_of_week,
-    quantity * unit_price * (1 - discount_rate) AS net_amount
-FROM sales
+      END AS day_of_week
+    , quantity * unit_price * (1 - discount_rate) AS net_amount
+FROM
+    sales
 LIMIT 20;
 ```
 
@@ -611,13 +647,14 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    customer_id,
-    customer_name,
-    customer_segment,
-    customer_name || '（' || customer_segment || '）' AS customer_display_name,
-    prefecture
-FROM customers
+SELECT
+      customer_id
+    , customer_name
+    , customer_segment
+    , customer_name || '（' || customer_segment || '）' AS customer_display_name
+    , prefecture
+FROM
+    customers
 LIMIT 20;
 ```
 
@@ -637,14 +674,15 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    product_id,
-    product_name,
-    LENGTH(product_name) AS product_name_length,
-    category,
-    UPPER(category) AS category_upper,
-    standard_price
-FROM products
+SELECT
+      product_id
+    , product_name
+    , LENGTH(product_name) AS product_name_length
+    , category
+    , UPPER(category) AS category_upper
+    , standard_price
+FROM
+    products
 LIMIT 10;
 ```
 
@@ -664,12 +702,13 @@ LIMIT 10;
 
 回答例
 ```sql
-SELECT 
-    product_id,
-    product_name,
-    SUBSTRING(product_name, 1, 4) AS product_short,
-    category
-FROM products
+SELECT
+      product_id
+    , product_name
+    , SUBSTRING(product_name, 1, 4) AS product_short
+    , category
+FROM
+    products
 LIMIT 10;
 ```
 
@@ -713,16 +752,18 @@ LIMIT 10;
 
 回答例
 ```sql
-SELECT 
-    s.sale_id,
-    s.sale_date,
-    p.product_name,
-    p.category,
-    s.quantity AS purchase_quantity,
-    s.unit_price,
-    s.quantity * s.unit_price * (1 - s.discount_rate) AS net_amount
-FROM sales s
-JOIN products p ON s.product_id = p.product_id
+SELECT
+      s.sale_id
+    , s.sale_date
+    , p.product_name
+    , p.category
+    , s.quantity AS purchase_quantity
+    , s.unit_price
+    , s.quantity * s.unit_price * (1 - s.discount_rate) AS net_amount
+FROM
+    sales s
+    JOIN products p
+        ON s.product_id = p.product_id
 LIMIT 10;
 ```
 
@@ -742,15 +783,18 @@ LIMIT 10;
 
 回答例
 ```sql
-SELECT 
-    s.sale_date,
-    c.customer_name,
-    p.product_name,
-    s.quantity AS purchase_quantity,
-    s.quantity * s.unit_price * (1 - s.discount_rate) AS net_amount
-FROM sales s
-JOIN customers c ON s.customer_id = c.customer_id
-JOIN products p ON s.product_id = p.product_id
+SELECT
+      s.sale_date
+    , c.customer_name
+    , p.product_name
+    , s.quantity AS purchase_quantity
+    , s.quantity * s.unit_price * (1 - s.discount_rate) AS net_amount
+FROM
+    sales s
+    JOIN customers c
+        ON s.customer_id = c.customer_id
+    JOIN products p
+        ON s.product_id = p.product_id
 LIMIT 10;
 ```
 
@@ -768,10 +812,14 @@ LIMIT 10;
 
 回答例
 ```sql
-SELECT DISTINCT p.category
-FROM sales s
-JOIN products p ON s.product_id = p.product_id
-ORDER BY p.category;
+SELECT DISTINCT
+      p.category
+FROM
+    sales s
+    JOIN products p
+        ON s.product_id = p.product_id
+ORDER BY
+    p.category;
 ```
 
 解説: 
@@ -798,17 +846,22 @@ ORDER BY p.category;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    customer_id,
-    quantity * unit_price * (1 - discount_rate) AS sales_amount
-FROM sales
-WHERE quantity * unit_price * (1 - discount_rate) > (
-    SELECT AVG(quantity * unit_price * (1 - discount_rate))
-    FROM sales
-)
-ORDER BY sales_amount DESC
+SELECT
+      sale_id
+    , sale_date
+    , customer_id
+    , quantity * unit_price * (1 - discount_rate) AS sales_amount
+FROM
+    sales
+WHERE
+    quantity * unit_price * (1 - discount_rate) > (
+        SELECT
+              AVG(quantity * unit_price * (1 - discount_rate))
+        FROM
+            sales
+    )
+ORDER BY
+    sales_amount DESC
 LIMIT 20;
 ```
 
@@ -836,18 +889,23 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    c.customer_name,
-    sub.total_revenue
-FROM (
-    SELECT 
-        customer_id,
-        SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
-    FROM sales
-    GROUP BY customer_id
-) AS sub
-JOIN customers c ON sub.customer_id = c.customer_id
-ORDER BY sub.total_revenue DESC;
+SELECT
+      c.customer_name
+    , sub.total_revenue
+FROM
+    (
+        SELECT
+              customer_id
+            , SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
+        FROM
+            sales
+        GROUP BY
+            customer_id
+    ) AS sub
+    JOIN customers c
+        ON sub.customer_id = c.customer_id
+ORDER BY
+    sub.total_revenue DESC;
 ```
 
 解説: 
@@ -879,24 +937,29 @@ ORDER BY sub.total_revenue DESC;
 ステップ1: ビューの作成
 ```sql
 CREATE VIEW monthly_sales_summary AS
-SELECT 
-    EXTRACT(YEAR FROM sale_date) AS sale_year,
-    EXTRACT(MONTH FROM sale_date) AS sale_month,
-    COUNT(*) AS sales_count,
-    SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
-FROM sales
-GROUP BY EXTRACT(YEAR FROM sale_date), EXTRACT(MONTH FROM sale_date);
+SELECT
+      EXTRACT(YEAR FROM sale_date) AS sale_year
+    , EXTRACT(MONTH FROM sale_date) AS sale_month
+    , COUNT(*) AS sales_count
+    , SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
+FROM
+    sales
+GROUP BY
+    EXTRACT(YEAR FROM sale_date)
+    , EXTRACT(MONTH FROM sale_date);
 ```
 
 ステップ2: ビューの利用
 ```sql
-SELECT 
-    sale_year,
-    sale_month,
-    sales_count,
-    total_revenue
-FROM monthly_sales_summary
-ORDER BY total_revenue DESC
+SELECT
+      sale_year
+    , sale_month
+    , sales_count
+    , total_revenue
+FROM
+    monthly_sales_summary
+ORDER BY
+    total_revenue DESC
 LIMIT 5;
 ```
 
@@ -947,17 +1010,19 @@ LIMIT 5;
 
 回答例
 ```sql
-SELECT 
-    sale_id,
-    sale_date,
-    quantity * unit_price * (1 - discount_rate) AS sales_amount,
-    CASE 
+SELECT
+      sale_id
+    , sale_date
+    , quantity * unit_price * (1 - discount_rate) AS sales_amount
+    , CASE
         WHEN quantity * unit_price * (1 - discount_rate) >= 5000 THEN 'High'
         WHEN quantity * unit_price * (1 - discount_rate) >= 2000 THEN 'Medium'
         ELSE 'Low'
-    END AS amount_tier
-FROM sales
-ORDER BY sales_amount DESC
+      END AS amount_tier
+FROM
+    sales
+ORDER BY
+    sales_amount DESC
 LIMIT 20;
 ```
 
@@ -983,21 +1048,24 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    s.sale_id,
-    s.sale_date,
-    c.customer_name,
-    c.customer_segment,
-    s.quantity * s.unit_price * (1 - s.discount_rate) AS sales_amount,
-    CASE 
+SELECT
+      s.sale_id
+    , s.sale_date
+    , c.customer_name
+    , c.customer_segment
+    , s.quantity * s.unit_price * (1 - s.discount_rate) AS sales_amount
+    , CASE
         WHEN c.customer_segment = 'VIP' AND s.quantity * s.unit_price * (1 - s.discount_rate) >= 3000 THEN 'Top Priority'
         WHEN c.customer_segment = 'VIP' THEN 'High Priority'
         WHEN c.customer_segment = 'Regular' AND s.quantity * s.unit_price * (1 - s.discount_rate) >= 5000 THEN 'High Priority'
         ELSE 'Normal'
-    END AS priority_level
-FROM sales s
-JOIN customers c ON s.customer_id = c.customer_id
-ORDER BY s.sale_date DESC
+      END AS priority_level
+FROM
+    sales s
+    JOIN customers c
+        ON s.customer_id = c.customer_id
+ORDER BY
+    s.sale_date DESC
 LIMIT 20;
 ```
 
@@ -1023,22 +1091,30 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    p.category,
-    COUNT(*) AS total_transactions,
-    SUM(CASE WHEN s.discount_rate > 0 
-        THEN s.quantity * s.unit_price * (1 - s.discount_rate) 
-        ELSE 0 
-    END) AS discounted_sales,
-    SUM(CASE WHEN s.discount_rate = 0 
-        THEN s.quantity * s.unit_price 
-        ELSE 0 
-    END) AS full_price_sales,
-    SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
-FROM sales s
-JOIN products p ON s.product_id = p.product_id
-GROUP BY p.category
-ORDER BY total_sales DESC;
+SELECT
+      p.category
+    , COUNT(*) AS total_transactions
+    , SUM(
+        CASE
+            WHEN s.discount_rate > 0 THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+            ELSE 0
+        END
+      ) AS discounted_sales
+    , SUM(
+        CASE
+            WHEN s.discount_rate = 0 THEN s.quantity * s.unit_price
+            ELSE 0
+        END
+      ) AS full_price_sales
+    , SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
+FROM
+    sales s
+    JOIN products p
+        ON s.product_id = p.product_id
+GROUP BY
+    p.category
+ORDER BY
+    total_sales DESC;
 ```
 
 解説: 
@@ -1057,19 +1133,20 @@ ORDER BY total_sales DESC;
 
 回答例
 ```sql
-SELECT 
-    customer_id,
-    customer_name,
-    customer_segment,
-    registration_date
-FROM customers
-ORDER BY 
-    CASE 
+SELECT
+      customer_id
+    , customer_name
+    , customer_segment
+    , registration_date
+FROM
+    customers
+ORDER BY
+    CASE
         WHEN customer_segment = 'VIP' THEN 1
         WHEN customer_segment = 'Regular' THEN 2
         WHEN customer_segment = 'New' THEN 3
-    END,
-    registration_date
+    END
+    , registration_date
 LIMIT 20;
 ```
 
@@ -1091,22 +1168,32 @@ LIMIT 20;
 
 回答例
 ```sql
-SELECT 
-    EXTRACT(YEAR FROM s.sale_date) AS sale_year,
-    EXTRACT(MONTH FROM s.sale_date) AS sale_month,
-    SUM(CASE WHEN p.category = '家電' 
-        THEN s.quantity * s.unit_price * (1 - s.discount_rate) 
-        ELSE 0 
-    END) AS electronics_sales,
-    SUM(CASE WHEN p.category = '家具' 
-        THEN s.quantity * s.unit_price * (1 - s.discount_rate) 
-        ELSE 0 
-    END) AS furniture_sales,
-    SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
-FROM sales s
-JOIN products p ON s.product_id = p.product_id
-GROUP BY EXTRACT(YEAR FROM s.sale_date), EXTRACT(MONTH FROM s.sale_date)
-ORDER BY sale_year, sale_month;
+SELECT
+      EXTRACT(YEAR FROM s.sale_date) AS sale_year
+    , EXTRACT(MONTH FROM s.sale_date) AS sale_month
+    , SUM(
+        CASE
+            WHEN p.category = '家電' THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+            ELSE 0
+        END
+      ) AS electronics_sales
+    , SUM(
+        CASE
+            WHEN p.category = '家具' THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+            ELSE 0
+        END
+      ) AS furniture_sales
+    , SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
+FROM
+    sales s
+    JOIN products p
+        ON s.product_id = p.product_id
+GROUP BY
+    EXTRACT(YEAR FROM s.sale_date)
+    , EXTRACT(MONTH FROM s.sale_date)
+ORDER BY
+    sale_year
+    , sale_month;
 ```
 
 解説: 
@@ -1121,22 +1208,31 @@ ORDER BY sale_year, sale_month;
 
 回答例
 ```sql
-SELECT 
-    c.customer_segment,
-    SUM(CASE WHEN p.category = '家電' 
-        THEN s.quantity * s.unit_price * (1 - s.discount_rate) 
-        ELSE 0 
-    END) AS electronics_sales,
-    SUM(CASE WHEN p.category = '家具' 
-        THEN s.quantity * s.unit_price * (1 - s.discount_rate) 
-        ELSE 0 
-    END) AS furniture_sales,
-    SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
-FROM sales s
-JOIN products p ON s.product_id = p.product_id
-JOIN customers c ON s.customer_id = c.customer_id
-GROUP BY c.customer_segment
-ORDER BY total_sales DESC;
+SELECT
+      c.customer_segment
+    , SUM(
+        CASE
+            WHEN p.category = '家電' THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+            ELSE 0
+        END
+      ) AS electronics_sales
+    , SUM(
+        CASE
+            WHEN p.category = '家具' THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+            ELSE 0
+        END
+      ) AS furniture_sales
+    , SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
+FROM
+    sales s
+    JOIN products p
+        ON s.product_id = p.product_id
+    JOIN customers c
+        ON s.customer_id = c.customer_id
+GROUP BY
+    c.customer_segment
+ORDER BY
+    total_sales DESC;
 ```
 
 解説: 
@@ -1162,41 +1258,50 @@ ORDER BY total_sales DESC;
 回答例
 ```sql
 WITH monthly_metrics AS (
-    SELECT 
-        EXTRACT(YEAR FROM sale_date) AS sale_year,
-        EXTRACT(MONTH FROM sale_date) AS sale_month,
-        COUNT(*) AS sales_count,
-        SUM(quantity * unit_price * (1 - discount_rate)) AS revenue,
-        COUNT(DISTINCT customer_id) AS customer_count
-    FROM sales
-    GROUP BY EXTRACT(YEAR FROM sale_date), EXTRACT(MONTH FROM sale_date)
+    SELECT
+          EXTRACT(YEAR FROM sale_date) AS sale_year
+        , EXTRACT(MONTH FROM sale_date) AS sale_month
+        , COUNT(*) AS sales_count
+        , SUM(quantity * unit_price * (1 - discount_rate)) AS revenue
+        , COUNT(DISTINCT customer_id) AS customer_count
+    FROM
+        sales
+    GROUP BY
+        EXTRACT(YEAR FROM sale_date)
+        , EXTRACT(MONTH FROM sale_date)
 )
-SELECT 
-    sale_year,
-    sale_month,
-    'Sales Count' AS metric_name,
-    CAST(sales_count AS DECIMAL(18,2)) AS metric_value
-FROM monthly_metrics
+SELECT
+      sale_year
+    , sale_month
+    , 'Sales Count' AS metric_name
+    , CAST(sales_count AS DECIMAL(18,2)) AS metric_value
+FROM
+    monthly_metrics
 
 UNION ALL
 
-SELECT 
-    sale_year,
-    sale_month,
-    'Revenue' AS metric_name,
-    revenue AS metric_value
-FROM monthly_metrics
+SELECT
+      sale_year
+    , sale_month
+    , 'Revenue' AS metric_name
+    , revenue AS metric_value
+FROM
+    monthly_metrics
 
 UNION ALL
 
-SELECT 
-    sale_year,
-    sale_month,
-    'Customer Count' AS metric_name,
-    CAST(customer_count AS DECIMAL(18,2)) AS metric_value
-FROM monthly_metrics
+SELECT
+      sale_year
+    , sale_month
+    , 'Customer Count' AS metric_name
+    , CAST(customer_count AS DECIMAL(18,2)) AS metric_value
+FROM
+    monthly_metrics
 
-ORDER BY sale_year, sale_month, metric_name;
+ORDER BY
+    sale_year
+    , sale_month
+    , metric_name;
 ```
 
 解説: 
@@ -1222,16 +1327,20 @@ ORDER BY sale_year, sale_month, metric_name;
 
 回答例
 ```sql
-SELECT 
-    p.product_name,
-    SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales,
-    ROW_NUMBER() OVER (ORDER BY SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) DESC) AS row_num,
-    RANK() OVER (ORDER BY SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) DESC) AS rank,
-    DENSE_RANK() OVER (ORDER BY SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) DESC) AS dense_rank
-FROM sales s
-JOIN products p ON s.product_id = p.product_id
-GROUP BY p.product_name
-ORDER BY total_sales DESC;
+SELECT
+      p.product_name
+    , SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) AS total_sales
+    , ROW_NUMBER() OVER (ORDER BY SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) DESC) AS row_num
+    , RANK() OVER (ORDER BY SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) DESC) AS rank
+    , DENSE_RANK() OVER (ORDER BY SUM(s.quantity * s.unit_price * (1 - s.discount_rate)) DESC) AS dense_rank
+FROM
+    sales s
+    JOIN products p
+        ON s.product_id = p.product_id
+GROUP BY
+    p.product_name
+ORDER BY
+    total_sales DESC;
 ```
 
 解説: 
@@ -1252,14 +1361,19 @@ ORDER BY total_sales DESC;
 
 回答例
 ```sql
-SELECT 
-    customer_id,
-    sale_date,
-    quantity * unit_price * (1 - discount_rate) AS purchase_amount,
-    SUM(quantity * unit_price * (1 - discount_rate)) 
-        OVER (PARTITION BY customer_id ORDER BY sale_date) AS cumulative_revenue
-FROM sales
-ORDER BY customer_id, sale_date
+SELECT
+      customer_id
+    , sale_date
+    , quantity * unit_price * (1 - discount_rate) AS purchase_amount
+    , SUM(quantity * unit_price * (1 - discount_rate)) OVER (
+        PARTITION BY customer_id
+        ORDER BY sale_date
+      ) AS cumulative_revenue
+FROM
+    sales
+ORDER BY
+    customer_id
+    , sale_date
 LIMIT 30;
 ```
 
@@ -1279,13 +1393,22 @@ LIMIT 30;
 
 回答例
 ```sql
-SELECT 
-    customer_id,
-    sale_date,
-    LAG(sale_date) OVER (PARTITION BY customer_id ORDER BY sale_date) AS previous_purchase_date,
-    sale_date - LAG(sale_date) OVER (PARTITION BY customer_id ORDER BY sale_date) AS days_since_last
-FROM sales
-ORDER BY customer_id, sale_date
+SELECT
+      customer_id
+    , sale_date
+    , LAG(sale_date) OVER (
+        PARTITION BY customer_id
+        ORDER BY sale_date
+      ) AS previous_purchase_date
+    , sale_date - LAG(sale_date) OVER (
+        PARTITION BY customer_id
+        ORDER BY sale_date
+      ) AS days_since_last
+FROM
+    sales
+ORDER BY
+    customer_id
+    , sale_date
 LIMIT 30;
 ```
 
@@ -1305,14 +1428,18 @@ LIMIT 30;
 
 回答例
 ```sql
-SELECT 
-    sale_date,
-    sale_id,
-    quantity * unit_price * (1 - discount_rate) AS sales_amount,
-    AVG(quantity * unit_price * (1 - discount_rate)) 
-        OVER (ORDER BY sale_date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS moving_avg_3
-FROM sales
-ORDER BY sale_date
+SELECT
+      sale_date
+    , sale_id
+    , quantity * unit_price * (1 - discount_rate) AS sales_amount
+    , AVG(quantity * unit_price * (1 - discount_rate)) OVER (
+        ORDER BY sale_date
+        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+      ) AS moving_avg_3
+FROM
+    sales
+ORDER BY
+    sale_date
 LIMIT 30;
 ```
 
@@ -1342,26 +1469,31 @@ LIMIT 30;
 回答例
 ```sql
 WITH customer_revenue AS (
-    SELECT 
-        customer_id,
-        SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
-    FROM sales
-    GROUP BY customer_id
+    SELECT
+          customer_id
+        , SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
+    FROM
+        sales
+    GROUP BY
+        customer_id
 )
-SELECT 
-    cr.customer_id,
-    c.customer_name,
-    cr.total_revenue,
-    NTILE(4) OVER (ORDER BY cr.total_revenue DESC) AS revenue_quartile,
-    CASE 
+SELECT
+      cr.customer_id
+    , c.customer_name
+    , cr.total_revenue
+    , NTILE(4) OVER (ORDER BY cr.total_revenue DESC) AS revenue_quartile
+    , CASE
         WHEN NTILE(4) OVER (ORDER BY cr.total_revenue DESC) = 1 THEN 'Top 25%'
         WHEN NTILE(4) OVER (ORDER BY cr.total_revenue DESC) = 2 THEN 'Upper Middle'
         WHEN NTILE(4) OVER (ORDER BY cr.total_revenue DESC) = 3 THEN 'Lower Middle'
         ELSE 'Bottom 25%'
-    END AS revenue_segment
-FROM customer_revenue cr
-JOIN customers c ON cr.customer_id = c.customer_id
-ORDER BY cr.total_revenue DESC;
+      END AS revenue_segment
+FROM
+    customer_revenue cr
+    JOIN customers c
+        ON cr.customer_id = c.customer_id
+ORDER BY
+    cr.total_revenue DESC;
 ```
 
 解説: 
@@ -1385,18 +1517,23 @@ ORDER BY cr.total_revenue DESC;
 回答例
 ```sql
 WITH customer_totals AS (
-    SELECT 
-        customer_id,
-        SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
-    FROM sales
-    GROUP BY customer_id
+    SELECT
+          customer_id
+        , SUM(quantity * unit_price * (1 - discount_rate)) AS total_revenue
+    FROM
+        sales
+    GROUP BY
+        customer_id
 )
-SELECT 
-    c.customer_name,
-    ct.total_revenue
-FROM customer_totals ct
-JOIN customers c ON ct.customer_id = c.customer_id
-ORDER BY ct.total_revenue DESC;
+SELECT
+      c.customer_name
+    , ct.total_revenue
+FROM
+    customer_totals ct
+    JOIN customers c
+        ON ct.customer_id = c.customer_id
+ORDER BY
+    ct.total_revenue DESC;
 ```
 
 解説: 
@@ -1419,24 +1556,31 @@ ORDER BY ct.total_revenue DESC;
 回答例
 ```sql
 WITH vip_purchases AS (
-    SELECT 
-        s.sale_id,
-        s.customer_id,
-        s.product_id,
-        s.quantity * s.unit_price * (1 - s.discount_rate) AS sales_amount
-    FROM sales s
-    JOIN customers c ON s.customer_id = c.customer_id
-    WHERE c.customer_segment = 'VIP'
+    SELECT
+          s.sale_id
+        , s.customer_id
+        , s.product_id
+        , s.quantity * s.unit_price * (1 - s.discount_rate) AS sales_amount
+    FROM
+        sales s
+        JOIN customers c
+            ON s.customer_id = c.customer_id
+    WHERE
+        c.customer_segment = 'VIP'
 )
-SELECT 
-    p.category,
-    COUNT(*) AS vip_purchase_count,
-    SUM(vp.sales_amount) AS vip_total_sales,
-    AVG(vp.sales_amount) AS vip_avg_purchase
-FROM vip_purchases vp
-JOIN products p ON vp.product_id = p.product_id
-GROUP BY p.category
-ORDER BY vip_total_sales DESC;
+SELECT
+      p.category
+    , COUNT(*) AS vip_purchase_count
+    , SUM(vp.sales_amount) AS vip_total_sales
+    , AVG(vp.sales_amount) AS vip_avg_purchase
+FROM
+    vip_purchases vp
+    JOIN products p
+        ON vp.product_id = p.product_id
+GROUP BY
+    p.category
+ORDER BY
+    vip_total_sales DESC;
 ```
 
 解説: 
@@ -1477,41 +1621,57 @@ ORDER BY vip_total_sales DESC;
 回答例
 ```sql
 WITH first_purchase AS (
-    SELECT 
-        customer_id,
-        MIN(sale_date) AS first_purchase_date
-    FROM sales
-    GROUP BY customer_id
+    SELECT
+          customer_id
+        , MIN(sale_date) AS first_purchase_date
+    FROM
+        sales
+    GROUP BY
+        customer_id
 )
-SELECT 
-    EXTRACT(YEAR FROM s.sale_date) AS sale_year,
-    EXTRACT(MONTH FROM s.sale_date) AS sale_month,
-    SUM(CASE 
-        WHEN EXTRACT(YEAR FROM s.sale_date) = EXTRACT(YEAR FROM fp.first_purchase_date)
-         AND EXTRACT(MONTH FROM s.sale_date) = EXTRACT(MONTH FROM fp.first_purchase_date)
-        THEN s.quantity * s.unit_price * (1 - s.discount_rate)
-        ELSE 0 
-    END) AS new_customer_revenue,
-    SUM(CASE 
-        WHEN EXTRACT(YEAR FROM s.sale_date) != EXTRACT(YEAR FROM fp.first_purchase_date)
-          OR EXTRACT(MONTH FROM s.sale_date) != EXTRACT(MONTH FROM fp.first_purchase_date)
-        THEN s.quantity * s.unit_price * (1 - s.discount_rate)
-        ELSE 0 
-    END) AS existing_customer_revenue,
-    COUNT(DISTINCT CASE 
-        WHEN EXTRACT(YEAR FROM s.sale_date) = EXTRACT(YEAR FROM fp.first_purchase_date)
-         AND EXTRACT(MONTH FROM s.sale_date) = EXTRACT(MONTH FROM fp.first_purchase_date)
-        THEN s.customer_id 
-    END) AS new_customers,
-    COUNT(DISTINCT CASE 
-        WHEN EXTRACT(YEAR FROM s.sale_date) != EXTRACT(YEAR FROM fp.first_purchase_date)
-          OR EXTRACT(MONTH FROM s.sale_date) != EXTRACT(MONTH FROM fp.first_purchase_date)
-        THEN s.customer_id 
-    END) AS existing_customers
-FROM sales s
-JOIN first_purchase fp ON s.customer_id = fp.customer_id
-GROUP BY EXTRACT(YEAR FROM s.sale_date), EXTRACT(MONTH FROM s.sale_date)
-ORDER BY sale_year, sale_month;
+SELECT
+      EXTRACT(YEAR FROM s.sale_date) AS sale_year
+    , EXTRACT(MONTH FROM s.sale_date) AS sale_month
+    , SUM(
+        CASE
+            WHEN EXTRACT(YEAR FROM s.sale_date) = EXTRACT(YEAR FROM fp.first_purchase_date)
+                AND EXTRACT(MONTH FROM s.sale_date) = EXTRACT(MONTH FROM fp.first_purchase_date)
+            THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+            ELSE 0
+        END
+      ) AS new_customer_revenue
+    , SUM(
+        CASE
+            WHEN EXTRACT(YEAR FROM s.sale_date) != EXTRACT(YEAR FROM fp.first_purchase_date)
+                OR EXTRACT(MONTH FROM s.sale_date) != EXTRACT(MONTH FROM fp.first_purchase_date)
+            THEN s.quantity * s.unit_price * (1 - s.discount_rate)
+            ELSE 0
+        END
+      ) AS existing_customer_revenue
+    , COUNT(DISTINCT
+        CASE
+            WHEN EXTRACT(YEAR FROM s.sale_date) = EXTRACT(YEAR FROM fp.first_purchase_date)
+                AND EXTRACT(MONTH FROM s.sale_date) = EXTRACT(MONTH FROM fp.first_purchase_date)
+            THEN s.customer_id
+        END
+      ) AS new_customers
+    , COUNT(DISTINCT
+        CASE
+            WHEN EXTRACT(YEAR FROM s.sale_date) != EXTRACT(YEAR FROM fp.first_purchase_date)
+                OR EXTRACT(MONTH FROM s.sale_date) != EXTRACT(MONTH FROM fp.first_purchase_date)
+            THEN s.customer_id
+        END
+      ) AS existing_customers
+FROM
+    sales s
+    JOIN first_purchase fp
+        ON s.customer_id = fp.customer_id
+GROUP BY
+    EXTRACT(YEAR FROM s.sale_date)
+    , EXTRACT(MONTH FROM s.sale_date)
+ORDER BY
+    sale_year
+    , sale_month;
 ```
 
 解説: 
