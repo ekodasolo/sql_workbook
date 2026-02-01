@@ -1062,7 +1062,7 @@ ORDER BY
 
 ステップ1: ビューの作成
 ```sql
-CREATE VIEW monthly_sales_summary AS
+CREATE OR REPLACE VIEW monthly_sales_summary AS
 SELECT
       EXTRACT(YEAR FROM sale_date) AS sale_year
     , EXTRACT(MONTH FROM sale_date) AS sale_month
