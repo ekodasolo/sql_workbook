@@ -212,8 +212,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-data/
-
 # -- Custom --
 secrets/
 *.db
