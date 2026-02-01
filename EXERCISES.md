@@ -90,10 +90,10 @@
   - 問題32: LAGとLEADで前後の行を参照｜★★★☆☆（10分）— LAG() OVER(PARTITION BY)
   - 問題33: 移動平均（ウィンドウフレーム）｜★★★☆☆（10分）— AVG() OVER(ROWS BETWEEN)
   - 問題34: NTILE（パーセンタイル分割）｜★★★★☆（20分）— WITH(CTE), NTILE, CASE式
-- **🎓 応用編Part4：CTE（WITH句）マスター**
+- **応用編Part4：CTE（WITH句）マスター**
   - 問題35: CTEを使った段階的な集計｜★★★☆☆（10分）— WITH(CTE), JOIN, SUM
   - 問題36: CTEでVIP顧客の購買分析｜★★★☆☆（15分）— WITH(CTE), JOIN, WHERE, GROUP BY
-- **🎓 チャレンジ問題**
+- **チャレンジ問題**
   - 問題37: 月別コホート分析（新規・既存顧客）｜★★★★★（30分）— WITH(CTE), JOIN, EXTRACT, SUM(CASE WHEN), COUNT(DISTINCT CASE WHEN)
 
 ---
@@ -1628,7 +1628,7 @@ ORDER BY
 
 ---
 
-## 🎓 応用編Part4：CTE（WITH句）マスター
+## 応用編Part4：CTE（WITH句）マスター
 
 ### 問題35: CTEを使った段階的な集計｜★★★☆☆（目安：10分）
 
@@ -1715,7 +1715,7 @@ ORDER BY
 
 ---
 
-## 🎓 チャレンジ問題
+## チャレンジ問題
 
 ### 問題37: 月別コホート分析（新規・既存顧客）｜★★★★★（目安：30分）
 
