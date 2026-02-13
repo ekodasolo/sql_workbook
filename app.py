@@ -49,10 +49,10 @@ def init_db():
             SELECT * FROM read_csv_auto('{data_dir}/stores.csv')
         """)
         
-        st.success("✅ データの読み込みに成功しました")
+        st.success(" データの読み込みに成功しました")
         
     except Exception as e:
-        st.error(f"❌ データ読み込みエラー: {e}")
+        st.error(f" データ読み込みエラー: {e}")
         st.info("data/フォルダにCSVファイルが配置されているか確認してください")
     
     return con
@@ -67,7 +67,7 @@ with st.sidebar:
     
     for table in tables:
         table_name = table[0]
-        if st.button(f"📋 {table_name}", key=f"btn_{table_name}"):
+        if st.button(f" {table_name}", key=f"btn_{table_name}"):
             st.session_state['selected_table'] = table_name
     
 
@@ -94,10 +94,10 @@ FETCH FIRST 10 ROWS ONLY;"""
     btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 2])
     
     with btn_col1:
-        execute_btn = st.button("▶️ 実行", type="primary", width='stretch')
+        execute_btn = st.button("実行", type="primary", width='stretch')
     
     with btn_col2:
-        clear_btn = st.button("🗑️ クリア", width='stretch')
+        clear_btn = st.button("クリア", width='stretch')
     
     if clear_btn:
         st.session_state['sql_input'] = ""
@@ -126,29 +126,29 @@ with col2:
                 result = con.execute(sql_query).fetchdf()
                 
                 # 結果表示
-                st.success(f"✅ クエリ実行成功！ ({len(result)}行取得)")
+                st.success(f" クエリ実行成功！ ({len(result)}行取得)")
                 st.dataframe(result, width='stretch', height='stretch')
                 
                 # 統計情報
-                with st.expander("📈 データ統計"):
-                    st.write(f"**行数**: {len(result)}")
-                    st.write(f"**列数**: {len(result.columns)}")
-                    st.write(f"**カラム**: {', '.join(result.columns)}")
+                with st.expander("データ統計"):
+                    st.write(f"行数: {len(result)}")
+                    st.write(f"列数: {len(result.columns)}")
+                    st.write(f"カラム: {', '.join(result.columns)}")
                 
             except Exception as e:
-                st.error(f"❌ エラーが発生しました")
+                st.error(f" エラーが発生しました")
                 st.code(str(e), language="text")
                 
                 # 初学者向けのヒント
                 error_msg = str(e).lower()
                 if "syntax error" in error_msg:
-                    st.info("💡 **ヒント**: SQL構文にエラーがあります。セミコロン、カンマ、括弧などを確認してください。")
+                    st.info(" ヒント: SQL構文にエラーがあります。セミコロン、カンマ、括弧などを確認してください。")
                 elif "table" in error_msg and "not found" in error_msg:
-                    st.info("💡 **ヒント**: テーブル名が正しいか確認してください。左サイドバーで利用可能なテーブルを確認できます。")
+                    st.info(" ヒント: テーブル名が正しいか確認してください。左サイドバーで利用可能なテーブルを確認できます。")
                 elif "column" in error_msg:
-                    st.info("💡 **ヒント**: カラム名が正しいか確認してください。テーブルのスキーマ情報を確認しましょう。")
+                    st.info(" ヒント: カラム名が正しいか確認してください。テーブルのスキーマ情報を確認しましょう。")
         else:
-            st.warning("⚠️ SQLクエリを入力してください")
+            st.warning(" SQLクエリを入力してください")
 
 # フッター
 st.markdown("---")
