@@ -72,7 +72,7 @@ with st.sidebar:
     
 
 # メインエリア：2カラムレイアウト
-col1, col2 = st.columns([4, 6])
+col1, col2 = st.columns([4, 8])
 
 with col1:
     st.header("SQLエディタ")
@@ -127,7 +127,7 @@ with col2:
                 
                 # 結果表示
                 st.success(f"✅ クエリ実行成功！ ({len(result)}行取得)")
-                st.dataframe(result, width='stretch', height=400)
+                st.dataframe(result, width='stretch', height='stretch')
                 
                 # 統計情報
                 with st.expander("📈 データ統計"):

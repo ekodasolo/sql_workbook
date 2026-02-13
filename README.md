@@ -51,6 +51,8 @@ nohup streamlit run app.py --server.port 8501 --server.address 0.0.0.0 &
 
 ## 使い方
 
+<img width="70%" src="./img/screenshot01.png">
+
 1. テーブル一覧を確認: 左サイドバーで利用可能なテーブルをクリック
 2. 練習問題を見る: サイドバーの「 練習問題」リンクから問題集にアクセス
 3. SQLを書く: 左カラムのエディタにSQLクエリを入力
